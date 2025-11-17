@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12 40 — Contagem</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonte Jacquard -->
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url('background-site.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            font-family: 'Jacquard 12', cursive;
+
+            opacity: 0.75;
+            image-rendering: pixelated;
+        }
+
+        /* PULSO DO TÍTULO */
+        @keyframes pulseGlow {
+            0% { text-shadow: 0 0 12px red; }
+            50% { text-shadow: 0 0 25px red; transform: scale(1.03); }
+            100% { text-shadow: 0 0 12px red; }
+        }
+
+        .pulse-title {
+            animation: pulseGlow 2.5s infinite ease-in-out;
+        }
+
+        /* LINKS */
+        .link-button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-family: 'Jacquard 12', cursive;
+            font-size: 1.1rem;
+            padding: 0.4rem 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .link-button:hover {
+            color: #ff0000;
+            text-shadow: 0 0 8px red;
+        }
+
+        .timer-value {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #ff0000;
+            background-color: rgba(0, 0, 0, 0.45);
+            border: 1px solid #550000;
+            padding: 0.5rem 1rem;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+        }
+
+        /* ========== RESPONSIVIDADE ========= */
+
+        /* Celular pequeno */
+        @media (max-width: 480px) {
+
+            .pulse-title {
+                font-size: 2.7rem !important;
+            }
+
+            .timer-value {
+                font-size: 2.2rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            #countdown-timer {
+                padding: 1rem !important;
+                gap: 0.5rem !important;
+            }
+
+            .link-button {
+                font-size: 0.9rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            /* Botões quebram em 2 linhas */
+            .social-wrapper {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.8rem;
+                width: 90%;
+            }
+
+            /* topo */
+            .top-text {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Celular médio */
+        @media (max-width: 768px) {
+
+            .pulse-title {
+                font-size: 3.5rem;
+            }
+
+            .timer-value {
+                font-size: 3rem;
+            }
+
+            .social-wrapper {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col items-center justify-center text-center">
+
+    <!-- TOPO -->
+    <div class="absolute top-4 w-full text-center text-sm tracking-widest opacity-80 top-text">
+        todos os direitos reservados a llpedrada4k & twelvy
+    </div>
+
+    <main class="flex flex-col items-center justify-center p-6 text-center">
+
+        <!-- TÍTULO PULSANDO -->
+        <h1 id="dynamic-title" class="pulse-title text-5xl sm:text-6xl mb-8 tracking-widest">
+            Carregando...
+        </h1>
+
+        <!-- CONTADOR -->
+        <div id="countdown-timer" class="flex flex-row justify-center items-end p-6 sm:p-10 
+                bg-black/40 border border-red-800 gap-6">
+            <div id="timer-message" class="text-2xl text-red-600 font-bold">
+                Carregando contador...
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SOCIAL -->
+    <div class="social-wrapper flex flex-row space-x-6 fixed bottom-8">
+
+        <a href="https://www.instagram.com/llpedrada4k" target="_blank" class="link-button">
+            Instagram llpedrada4k
+        </a>
+
+        <a href="https://www.instagram.com/yng.twelvy" target="_blank" class="link-button">
+            Instagram Twelvy
+        </a>
+
+        <a href="https://ditto.fm/12-40" target="_blank" class="link-button">
+            Pre-Save
+        </a>
+
+        <a href="https://open.spotify.com/intl-pt/artist/6CEOh1doCeUPjF5LtGB0R1" 
+           target="_blank" class="link-button">
+            LLPedrada4k Spotify
+        </a>
+
+        <a href="https://open.spotify.com/intl-pt/artist/3FkIFcxMsTYrg0b1hmrhH7" 
+           target="_blank" class="link-button">
+            Twelvy Spotify
+        </a>
+
+    </div>
+
+    <script>
+        /* ============================
+           CONTADOR
+        ============================ */
+
+        function setupCountdown() {
+            const targetDate = new Date(`November 19, ${new Date().getFullYear()} 00:00:00`).getTime();
+            const titleEl = document.getElementById("dynamic-title");
+            const timerBox = document.getElementById("countdown-timer");
+
+            function createUnit(id, label) {
+                const box = document.createElement("div");
+                box.className = "timer-unit mx-2 text-center";
+                box.innerHTML = `
+                    <div id="${id}-value" class="timer-value">00</div>
+                    <div class="text-sm mt-1 tracking-wider opacity-70">${label}</div>
+                `;
+                return box;
+            }
+
+            timerBox.innerHTML = "";
+            timerBox.appendChild(createUnit("hours", "Horas"));
+            timerBox.appendChild(createUnit("minutes", "Minutos"));
+            timerBox.appendChild(createUnit("seconds", "Segundos"));
+
+            setInterval(() => {
+                const now = Date.now();
+                const diff = targetDate - now;
+
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById("hours-value").textContent = String(hours).padStart(2, "0");
+                document.getElementById("minutes-value").textContent = String(minutes).padStart(2, "0");
+                document.getElementById("seconds-value").textContent = String(seconds).padStart(2, "0");
+
+                titleEl.textContent = `12 40 em ${hours} horas`;
+
+            }, 1000);
+        }
+
+        window.onload = setupCountdown;
+    </script>
+
+</body>
+</html>
